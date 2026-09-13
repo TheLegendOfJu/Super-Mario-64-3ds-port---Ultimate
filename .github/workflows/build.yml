@@ -1,0 +1,36 @@
+name: Build SM64 3DS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: devkitpro/devkitarm:latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Build Tools
+        run: |
+          dkp-pacman -Sy --noconfirm 3ds-dev makerom bannertool
+
+      - name: Decode BaseROM
+        env:
+          ROM_BASE64: ${{ secrets.BASEROM_BASE64 }}
+        run: |
+          echo "$ROM_BASE64" | base64 -d > baserom.us.z64
+
+      - name: Build 3DS Executables
+        run: |
+          source /etc/profile.d/devkit-env.sh
+          make VERSION=us BANNERTOOL=bannertool MAKEROM=makerom -j$(nproc)
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: SM64-3DS-Build
+          path: |
+            *.3dsx
+            *.cia

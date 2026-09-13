@@ -14,6 +14,7 @@ jobs:
 
       - name: Install Build Tools
         run: |
+          sed -i '/^\[options\]/a XferCommand = /usr/bin/wget --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" --passive-ftp -c -O %o %u' /opt/devkitpro/pacman/etc/pacman.conf
           dkp-pacman -Sy --noconfirm 3ds-dev
 
       - name: Decode BaseROM
@@ -23,9 +24,10 @@ jobs:
           echo "$ROM_BASE64" | base64 -d > baserom.eu.z64
 
       - name: Build 3DS Executables
+        shell: bash
         run: |
           source /etc/profile.d/devkit-env.sh
-          make VERSION=us BANNERTOOL=bannertool MAKEROM=makerom -j$(nproc)
+          make VERSION=eu BANNERTOOL=bannertool MAKEROM=makerom -j$(nproc)
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4

@@ -14,7 +14,10 @@ jobs:
 
       - name: Install Build Tools
         run: |
-          dkp-pacman -Sy --noconfirm 3ds-dev makerom bannertool
+          dkp-pacman -Sy --noconfirm 3ds-dev
+          wget https://github.com/Steveice10/build-tools/raw/master/makerom/linux/makerom -O /usr/local/bin/makerom
+          wget https://github.com/Steveice10/build-tools/raw/master/bannertool/linux/bannertool -O /usr/local/bin/bannertool
+          chmod +x /usr/local/bin/makerom /usr/local/bin/bannertool
 
       - name: Decode BaseROM
         env:

@@ -16,9 +16,10 @@ jobs:
         run: |
           dkp-pacman -Sy --noconfirm 3ds-dev
           apt-get update && apt-get install -y unzip wget
-          wget https://github.com/Steveice10/ProjectCTR/releases/download/v0.17/makerom_v0.17_ubuntu.zip -O makerom.zip
+          wget https://github.com/3DSGuy/ProjectCTR/releases/download/makerom-v0.19/makerom-v0.19-ubuntu_x86_64.zip -O makerom.zip
           unzip -o makerom.zip -d /usr/local/bin/
-          wget https://github.com/Steveice10/bannertool/releases/download/v1.2.0/bannertool.zip -O bannertool.zip
+          find /usr/local/bin -name "makerom*" ! -name "*.zip" -exec mv {} /usr/local/bin/makerom \;
+          wget https://github.com/Steveice10/bannertool/releases/download/v1.2.0/bannertool.zip -O bannertool.zip || wget https://github.com/AUReduux/bannertool/releases/download/1.2.0/bannertool.zip -O bannertool.zip
           unzip -o bannertool.zip -d /usr/local/bin/
           chmod +x /usr/local/bin/makerom /usr/local/bin/bannertool
 

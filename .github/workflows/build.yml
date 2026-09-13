@@ -20,7 +20,7 @@ jobs:
         env:
           ROM_BASE64: ${{ secrets.BASEROM_BASE64 }}
         run: |
-          echo "$ROM_BASE64" | base64 -d > baserom.us.z64
+          echo "$ROM_BASE64" | base64 -d > baserom.eu.z64
 
       - name: Build 3DS Executables
         run: |

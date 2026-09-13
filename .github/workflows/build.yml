@@ -6,11 +6,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: devkitpro/3dsdev:latest
+    container: devkitpro/devkitarm:latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Install Build Tools
+        run: |
+          dkp-pacman -Sy --noconfirm 3ds-dev
+          apt-get update && apt-get install -y unzip wget
+          wget https://github.com/Steveice10/ProjectCTR/releases/download/v0.17/makerom_v0.17_ubuntu.zip -O makerom.zip
+          unzip -o makerom.zip -d /usr/local/bin/
+          wget https://github.com/Steveice10/bannertool/releases/download/v1.2.0/bannertool.zip -O bannertool.zip
+          unzip -o bannertool.zip -d /usr/local/bin/
+          chmod +x /usr/local/bin/makerom /usr/local/bin/bannertool
 
       - name: Decode BaseROM
         env:
@@ -21,7 +31,7 @@ jobs:
       - name: Build 3DS Executables
         run: |
           source /etc/profile.d/devkit-env.sh
-          make VERSION=eu -j$(nproc)
+          make VERSION=eu BANNERTOOL=bannertool MAKEROM=makerom -j$(nproc)
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
